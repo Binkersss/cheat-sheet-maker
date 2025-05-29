@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Tiling Table</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="toolbar">
+    <button onclick="addTile()">Add Tile</button>
+    <button onclick="deleteSelected()">Delete Selected</button>
+    <button onclick="printDiv('page')">Print to PDF</button>
+    <button onClick="saveDomState('page')">Save</button>
+    <input type="file" id="fileInput" style="display:none" onchange="loadDomStateFromFile(event, 'page')">
+    <button onclick="document.getElementById('fileInput').click()">Import File</button>
+    <label for="pageSizeSelect">Choose a page size:</label>
+    <select id="pageSizeSelect" onChange="resize()">
+      <option value="2">Sheet of Paper</option>
+      <option value="1">Small Notecard</option>
+    </select>
+  </div>
+  <div class="page" id="page"></div>
+  <div class="instructions">
+    <strong>Instructions:</strong> Click "Add Tile" to create a new tile. Click a tile to select it (highlighted in red), then click "Delete Selected" to remove it. Drag tiles to move them, and resize from edges. Tiles snap to a 20px grid. Paste images into a selected tile using Ctrl+V or right-click paste.
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="./page.js"></script>
+  <script src="./print.js"></script>
+  <script src="./save.js"></script>
+</body>
+</html>
+
