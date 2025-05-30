@@ -1,6 +1,7 @@
 let tileCount = 0;
 let selectedTile = null;
 const gridSize = 20;
+let isPreviewMode = false;
 
 function resize() {
     const page = document.getElementById('page');
@@ -48,6 +49,9 @@ function deleteSelected() {
     selectedTile = null;
     }
 }
+
+
+
 
 document.getElementById('page').addEventListener('click', () => {
     if (selectedTile) selectedTile.classList.remove('selected');
