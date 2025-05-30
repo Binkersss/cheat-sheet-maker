@@ -59,17 +59,59 @@ document.getElementById('page').addEventListener('click', () => {
 });
 
 document.addEventListener('paste', (event) => {
-    if (!selectedTile) return;
-    const items = event.clipboardData.items;
-    for (const item of items) {
+  if (!selectedTile) return;
+  const items = event.clipboardData.items;
+
+  for (const item of items) {
     if (item.type.indexOf('image') !== -1) {
-        const blob = item.getAsFile();
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(blob);
-        selectedTile.appendChild(img);
+      const blob = item.getAsFile();
+      const img = new Image();
+      const reader = new FileReader();
+
+      const spinner = document.createElement('div');
+      spinner.className = 'spinner';
+      selectedTile.appendChild(spinner);
+
+      reader.onload = function(e) {
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxSize = 800; // Max width or height
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+          const compressedImg = document.createElement('img');
+          compressedImg.src = compressedDataUrl;
+          compressedImg.loading = 'lazy';
+
+          selectedTile.removeChild(spinner);
+          selectedTile.appendChild(compressedImg);
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(blob);
     }
-    }
+  }
 });
+
 
 function makeInteractive(target) {
     interact(target)
