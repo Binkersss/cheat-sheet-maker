@@ -29,6 +29,9 @@
     <li>Tiles snap to a 20px grid.</li>
     <li>Paste images into a selected tile using <strong>Ctrl+V</strong> or right-click paste.</li>
     <li>Click <strong>"Print to PDF"</strong> to receive a PDF form of your cheat-sheet.</li>
+      <ul>
+        <li>Make sure there is no scroll bar as this will cause an error with the print rendering.</li>
+      </ul>
     <li>Click <strong>"Save"</strong> to download a snapshot of your current cheat-sheet. <em>(THERE IS NO AUTOSAVE)</em></li>
     <li>Click <strong>"Import File"</strong> to import a previously saved snapshot.</li>
     <li>You can choose between:
@@ -40,6 +43,8 @@
   </ul>
 </div>
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="./page.js"></script>
   <script src="./print.js"></script>
   <script src="./save.js"></script>

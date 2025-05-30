@@ -1,26 +1,87 @@
 function printDiv(divId) {
-    const printContents = document.getElementById(divId).innerHTML;
-    const printWindow = window.open('', '', 'width=600,height=600');
+    const originalElement = document.getElementById(divId);
+    const clonedElement = originalElement.cloneNode(true);
 
-    // The path to your styles.css (adjust it as needed)
+    // Replace each textarea with a div containing its current value
+    const textareas = originalElement.querySelectorAll('textarea');
+    const clonedTextareas = clonedElement.querySelectorAll('textarea');
+
+    textareas.forEach((textarea, index) => {
+        const value = textarea.value;
+        const displayDiv = document.createElement('div');
+        displayDiv.textContent = value;
+
+        // Style to mimic a textarea
+        displayDiv.style.whiteSpace = 'pre-wrap';
+        displayDiv.style.border = '1px solid #ccc';
+        displayDiv.style.padding = '4px';
+        displayDiv.style.minHeight = '1em';
+        displayDiv.style.fontFamily = 'monospace'; // Ensures monospace font
+        displayDiv.style.fontSize = '13px'; // Optional: match textarea font size
+
+        clonedTextareas[index].parentNode.replaceChild(displayDiv, clonedTextareas[index]);
+    });
+
+    const printWindow = window.open('', '', 'width=600,height=600');
     const styles = './styles.css';
 
-    // Start writing the document for the print window
-    printWindow.document.write('<html><head><title>Print</title>');
-    // Add the link to your external CSS
-    printWindow.document.write(`<link rel="stylesheet" type="text/css" href="${styles}">`);
-    // Optionally, you can include other inline styles or meta tags here
+    printWindow.document.write(`
+        <html>
+            <head>
+            <title>Print</title>
+            <link rel="stylesheet" type="text/css" href="${styles}">
+            <style>
+                @page {
+                    margin: 0;
+                }
+                @media print {
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                }
+                body {
+                margin: 0;
+                padding: 0;
+                }
+            </style>
+            </head>
+            <body>
+            ${clonedElement.outerHTML}
+            </body>
+        </html>
+        `);
 
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</body></html>');
+    printWindow.document.close();
 
-    // Close the document to ensure all content is fully loaded
-    printWindow.document.close(); 
-
-    // Wait a bit for the document and styles to load before printing
     printWindow.onload = function () {
         printWindow.print();
         printWindow.close();
     };
 }
+
+
+// function captureAndDownloadPDF(divId) {
+//     const element = document.getElementById(divId);
+//     element.scrollIntoView({ behavior: 'auto', block: 'start' });
+//     // Wait for rendering to settle
+//     document.fonts.ready.then(() => { 
+//         setTimeout(() => {
+//             html2canvas(element, {
+//                 scale: window.devicePixelRatio,
+//                 useCORS: true
+//             }).then(canvas => {
+//                 const imgData = canvas.toDataURL('image/png');
+//                 const { jsPDF } = window.jspdf;
+//                 const pdf = new jsPDF({
+//                     orientation: 'portrait',
+//                     unit: 'px',
+//                     format: [canvas.width, canvas.height]
+//                 });
+
+//                 pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+//                 pdf.save('screenshot.pdf');
+//             });
+//         }, 2000); // Adjust delay as needed
+//     });
+// }
